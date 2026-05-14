@@ -1,0 +1,100 @@
+{% extends 'mailing_service/base.html' %}
+{% load static %}
+
+{% block title %}Главная - Сервис рассылок{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container my-5">
+        <!-- Заголовок -->
+        <div class="text-center mb-5">
+            <h1 class="display-4">Сервис управления рассылками</h1>
+            <p class="lead">Управляйте своими рассылками и отслеживайте статистику</p>
+        </div>
+
+        <!-- Статистика -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="card shadow-sm border-primary">
+                    <div class="card-body text-center">
+                        <h3 class="card-title text-primary">{{ count_distributions }}</h3>
+                        <p class="card-text">Всего рассылок</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm border-success">
+                    <div class="card-body text-center">
+                        <h3 class="card-title text-success">{{ unique_recipients }}</h3>
+                        <p class="card-text">Уникальных получателей</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm border-secondary">
+                    <div class="card-body text-center">
+                        <h3 class="card-title text-primary">{{ count_messages }}</h3>
+                        <p class="card-text">Всего сообщений</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm border-info">
+                    <div class="card-body text-center">
+                        <h3 class="card-title text-info">{{ active_distributions }}</h3>
+                        <p class="card-text">Активных рассылок</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Управление элементами -->
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Управление рассылками</h5>
+                        <p class="card-text">Управляйте рассылками для ваших клиентов</p>
+                        <a href="{% url 'mailing_service:distribution_list' %}" class="btn btn-primary">
+                            Управлять рассылками
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Управление получателями</h5>
+                        <p class="card-text">Добавьте или отредактируйте список получателей</p>
+                        <a href="{% url 'mailing_service:recipient_list' %}" class="btn btn-success">
+                            Управлять получателями
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Управление сообщениями</h5>
+                        <p class="card-text">Добавьте или отредактируйте сообщения</p>
+                        <a href="{% url 'mailing_service:message_list' %}" class="btn btn-secondary">
+                            Управлять сообщениями
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Статистика</h5>
+                        <p class="card-text">Просмотрите всю статистику по рассылкам</p>
+                        <a href="{% url 'mailing_service:attempt_list' %}" class="btn btn-info">
+                            Смотреть статистику
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

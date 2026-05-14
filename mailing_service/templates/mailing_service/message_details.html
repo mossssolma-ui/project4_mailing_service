@@ -1,0 +1,51 @@
+{% extends 'mailing_service/base.html' %}
+{% load static %}
+
+{% block title %} Текст сообщения {% endblock %}
+
+
+{% block content %}
+<main>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Карточка поста -->
+                <div class="card shadow">
+                    <div class="card-body">
+                        <!-- Заголовок -->
+                        <h1 class="card-title display-6 mb-3">{{ message.title }}</h1>
+                        <!-- Мета-информация -->
+                        <div class="d-flex gap-3 text-secondary mb-4">
+                            <small>
+                                <i class="bi bi-calendar3 me-1"></i>{{ message.created_at|date:"d E Y" }}
+                            </small>
+                            {% if message.updated_at != message.created_at %}
+                            <small>
+                                <i class="bi bi-pencil me-1"></i>Обновлено: {{ message.updated_at|date:"d.m.Y" }}
+                            </small>
+                            {% endif %}
+                        </div>
+                        <!-- Контент -->
+                        <div class="card-text fs-5 lh-lg">
+                            {{ message.content }}
+                        </div>
+
+                        <hr>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'mailing_service:message_list' %}" class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left me-2"></i>Назад к списку
+                            </a>
+                            <a href="{% url 'mailing_service:message_update' message.pk %}" class="btn btn-warning">
+                                <i class="bi bi-pencil me-2"></i>Редактировать
+                            </a>
+                            <a href="{% url 'mailing_service:message_delete' message.pk %}" class="btn btn-danger">
+                                <i class="bi bi-trash me-2"></i>Удалить
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
