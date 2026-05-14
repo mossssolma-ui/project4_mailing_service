@@ -1,0 +1,72 @@
+{% extends 'mailing_service/base.html' %}
+{% load static %}
+
+{% block title %}Детали рассылки{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Карточка рассылки -->
+                <div class="card shadow">
+                    <div class="card-body">
+                        <!-- Заголовок -->
+                        <h1 class="card-title display-6 mb-3">{{ distribution.message.title }}</h1>
+
+                        <!-- Статус -->
+                        <div class="mb-3">
+                            <span class="badge
+                                {% if distribution.status == 'created' %}bg-secondary
+                                {% elif distribution.status == 'started' %}bg-success
+                                {% else %}bg-danger{% endif %} fs-6">
+                                Статус: {{ distribution.get_status_display }}
+                            </span>
+                        </div>
+
+                        <!-- Мета-информация (время) -->
+                        <div class="d-flex gap-3 text-secondary mb-4">
+                            <small>
+                                <i class="bi bi-calendar3 me-1"></i>Начало: {{ distribution.start_time|date:"d.m.Y H:i" }}
+                            </small>
+                            <small>
+                                <i class="bi bi-calendar3 me-1"></i>Окончание: {{ distribution.end_time|date:"d.m.Y H:i" }}
+                            </small>
+                        </div>
+
+                        <!-- Текст письма -->
+                        <div class="card-text fs-5 lh-lg">
+                            {{ distribution.message.content|linebreaks }}
+                        </div>
+
+                        <hr>
+
+                        <!-- Информация о получателях -->
+                        <h5 class="mb-3">Получатели ({{ distribution.recipients.count }}):</h5>
+                        <div class="mb-4">
+                            {% for recipient in distribution.recipients.all %}
+                                <span class="badge bg-secondary me-1 mb-1">{{ recipient.email }}</span>
+                            {% empty %}
+                                <span class="text-muted">Нет получателей</span>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Кнопки действий -->
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'mailing_service:distribution_list' %}" class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left me-2"></i>Назад к списку
+                            </a>
+                            <a href="{% url 'mailing_service:distribution_update' distribution.pk %}" class="btn btn-warning">
+                                <i class="bi bi-pencil me-2"></i>Редактировать
+                            </a>
+                            <a href="{% url 'mailing_service:distribution_delete' distribution.pk %}" class="btn btn-danger">
+                                <i class="bi bi-trash me-2"></i>Удалить
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

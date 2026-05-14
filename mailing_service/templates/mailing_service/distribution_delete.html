@@ -1,0 +1,32 @@
+{% extends 'mailing_service/base.html' %}
+{% load static %}
+
+{% block title %}Удаление рассылки{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow border-danger">
+                    <div class="card-body text-center py-4">
+                        <h3 class="h5 mt-3">Вы уверены, что хотите удалить рассылку?</h3>
+                        {{ distribution.message.title }} для {% for recipient in distribution.recipients.all %} {{ recipient.email }} {% endfor %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-center gap-2">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash me-2"></i>Да, удалить
+                                </button>
+                                <a href="{% url 'mailing_service:distribution_list' %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Отмена
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

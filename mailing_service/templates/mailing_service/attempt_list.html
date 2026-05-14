@@ -1,0 +1,86 @@
+{% extends 'mailing_service/base.html' %}
+{% load static %}
+
+{% block title %}Статистика рассылок{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container my-5">
+        <h1 class="mb-4">Статистика</h1>
+
+        <div class="mb-3">
+            <a href="{% url 'mailing_service:home' %}" class="btn btn-outline-secondary">Главная</a>
+        </div>
+
+        <!-- Активные рассылки -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Активных рассылок: {{ active_distributions }}</h5>
+            </div>
+            {% if active_mailings %}
+            <div class="card-body">
+                <ol>
+                    {% for mailing in active_mailings %}
+                    <li>
+                        <a href="{% url 'mailing_service:distribution_details' mailing.pk %}">
+                            {{ mailing.message.title }}
+                        </a> Время: {{ mailing.start_time|date:"d.m.Y H:i" }}<br>
+                        <small class="text-muted">
+                            {{ mailing.start_time|date:"d.m.Y H:i" }} =====РАБОТА===== {{ mailing.end_time|date:"d.m.Y H:i" }}
+                        </small>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+            {% else %}
+            <div class="card-body text-muted">
+                В данный момент нет активных рассылок
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- История попыток -->
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">История попыток</h5>
+            </div>
+            {% if attempts %}
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Рассылка</th>
+                            <th>Статус</th>
+                            <th>Ответ</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for attempt in attempts %}
+                        <tr>
+                            <td>{{ attempt.dt|date:"d.m.Y H:i:s" }}</td>
+                            <td>{{ attempt.distribution.message.title }}</td>
+                            <td>
+                                {% if attempt.status == 'success' %}
+                                <span class="badge bg-success">Успешно</span>
+                                {% else %}
+                                <span class="badge bg-danger">Не успешно</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ attempt.response|truncatechars:50 }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <div class="card-body text-muted">
+                Попыток еще не было. Отправьте первую рассылку!
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}

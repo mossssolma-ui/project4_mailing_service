@@ -1,0 +1,36 @@
+{% extends 'mailing_service/base.html' %}
+{% load static %}
+
+{% block title %}Управление сообщениями{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container my-5">
+        <!-- Заголовок -->
+        <div class="text-center mb-5">
+            <h1 class="display-4">Список сообщений</h1>
+            <p class="lead">Здесь отображаются все сообщения</p>
+        </div>
+
+        <!-- Сообщения -->
+        <div class="mb-3">
+            <a href="{% url 'mailing_service:message_create' %}" class="btn btn-outline-secondary">
+                Создать сообщение
+            </a>
+            <a href="{% url 'mailing_service:home' %}" class="btn btn-outline-secondary">
+                Главная
+            </a>
+        </div>
+        {% if message %}
+        <div class="row g-4">
+            {% include "mailing_service/includes/inc_message.html" %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <h4 class="alert-heading">Пока нет данных</h4>
+            <p>Данные появится после добавления сообщений.</p>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
