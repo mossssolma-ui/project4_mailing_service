@@ -1,0 +1,70 @@
+{% extends 'mailing_service/base.html' %}
+{% load static %}
+
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="text-center py-5">
+        <h1 class="display-4">Пользователи</h1>
+        <p class="lead">Здесь отображаются все пользователи сервиса</p>
+    </header>
+
+    {% if users %}
+    <div class="row g-4">
+        <div class="container mt-3">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th style="width: 50px;">№</th>
+                        <th style="width: 20%;">E-mail</th>
+                        <th style="width: 20%;">ФИО</th>
+                        <th style="width: 20%;">Дата регистрации</th>
+                        <th style="width: 10%;">Статус</th>
+                        <th style="width: 15%;">Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.first_name|default:"—" }} {{ user.last_name|default:"" }}</td>
+                        <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
+                        <td>
+                            {% if user.is_active %}
+                            <span class="badge bg-success">Активен</span>
+                            {% else %}
+                            <span class="badge bg-danger">Заблокирован</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.is_active %}
+                            <a href="{% url 'users:user_block' user.pk %}"
+                               class="btn btn-sm btn-outline-danger">
+                                Заблокировать
+                            </a>
+                            {% else %}
+                            <a href="{% url 'users:user_block' user.pk %}"
+                               class="btn btn-sm btn-outline-success">
+                                <i class="bi bi-unlock me-1"></i>Разблокировать
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <h4 class="alert-heading">Пока нет данных</h4>
+        <p>Данные появятся после регистрации пользователя</p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

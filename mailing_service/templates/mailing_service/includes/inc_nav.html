@@ -19,9 +19,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'mailing_service:distribution_list' %}">Рассылки</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'mailing_service:attempt_list' %}">Статистика</a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'mailing_service:attempt_list' %}">Статистика</a>
+                    </li>
+                    {% if perms.mailing_service.can_view_all_distributions %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:users_list' %}">
+                                Пользователи
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endif %}
             </ul>
 
             <ul class="navbar-nav ms-auto">

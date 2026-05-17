@@ -1,41 +1,91 @@
-# Сервис рассылок
-## Структура проекта
+# Сервис управления рассылками сообщений
+
+## Описание проекта
+
+Веб-приложение на Django для управления массовыми email-рассылками. Позволяет создавать, редактировать и отправлять
+рассылки, управлять клиентами и сообщениями, а также отслеживать статистику отправок.
+
+## Основные возможности
+
+### Для всех пользователей
+
+- Регистрация с подтверждением email
+- Восстановление пароля
+- Просмотр статистики на главной странице
+
+### Для авторизованных пользователей
+
+- Управление получателями (CRUD)
+- Управление сообщениями (CRUD)
+- Управление рассылками (CRUD)
+- Отправка рассылок по требованию
+- Просмотр истории и статистики своих рассылок
+
+### Для менеджеров
+
+- Просмотр всех рассылок, получателей, сообщений
+- Просмотр всех пользователей системы
+- Блокировка/разблокировка пользователей
+- Отключение рассылок
+- Общая статистика по системе
+
+## Технологии
+
+- **Backend:** Django 6.0
+- **База данных:** PostgreSQL
+- **Аутентификация:** Кастомная модель пользователя (email вместо username)
+- **Отправка почты:** SMTP (Yandex) / консольный бэкенд для разработки
+- **Кеширование:** In-memory cache (LocMemCache)
+- **Frontend:** Bootstrap 5, Bootstrap Icons
+
+
+## 🔧 Установка и запуск
+
+### 1. Клонирование репозитория
+```bash
+git clone git@github.com:mossssolma-ui/project4_mailing_service.git
+cd project4_mailing_service
 ```
-project4_mailing_service/
-├── static/                     # статические файлы
-├── media/                      # медиа-файлы приложения
-├── manage.py
-├── config/
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-│   
-│   
-├── mailing_service/
-│   ├── __init__.py             
-│   ├── migrations/             
-│   ├── templates/             
-│   │    ├── mailing_service/             
-│   │       ├── includes/             
-│   │       │   ├── inc_footer.html             
-│   │       │   ├── inc_nav_recipient.html             
-│   │       ├── base.html             
-│   │       ├── header.html             
-│   │       ├── resipient_create.html             
-│   │       ├── resipient_delete.html             
-│   │       ├── resipient_details.html             
-│   │       ├── resipient_list.html             
-│   │       ├── message_list.html             
-│   │       ├── message_details.html             
-│   │       ├── message_delete.html             
-│   │       ├── message_create.html             
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── tests.py
-│   ├── urls.py
-│   └── views.py   
-└── ...
+### 2. Установка зависимостей
+```bash
+poetry install
+```
+### 3. Настройка переменных окружения
+```bash
+Создайте файл .env в корне проекта
+SECRET_KEY=
+
+DEBUG=
+
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_PORT=
+
+CSU_PASSWORD=
+
+EMAIL_HOST_USER=
+EMAIL_HOST_PASSWORD=
+
+CACHE_ENABLED=
+```
+
+### 4. Применение миграций
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### 5. Создание групп и прав
+```bash
+python manage.py create_group
+```
+### 6. Создание суперпользователя
+```bash
+python manage.py csu
+```
+### 7. Запуск сервера
+```bash
+python manage.py runserver
 ```

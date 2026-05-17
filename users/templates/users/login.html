@@ -9,20 +9,6 @@
         <h1 class="display-4">Вход на сайт</h1>
         <p class="lead">Введите свои данные для входа</p>
     </header>
-
-    {% if messages %}
-        <div class="row justify-content-center">
-            <div class="col-8">
-                {% for message in messages %}
-                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
-
     <div class="row justify-content-center">
         <div class="col-8">
             <form method="post" class="border p-4 rounded">

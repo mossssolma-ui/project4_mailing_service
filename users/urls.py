@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeDoneV
 from django.urls import path, reverse_lazy
 from users.apps import UsersConfig
 from .views import RegisterView, ProfileUserDetailView, ProfileUserUpdateView, CustomPasswordChangeView, \
-    EmailVerificationView
+    EmailVerificationView, UsersView, UserBlockView
 
 app_name = UsersConfig.name
 
@@ -45,4 +45,6 @@ urlpatterns = [
          ),
          name='password_reset_complete'),
 
+    path('list/', UsersView.as_view(), name='users_list'),
+    path('toggle-block/<int:pk>/', UserBlockView.as_view(), name='user_block'),
 ]

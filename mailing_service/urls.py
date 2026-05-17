@@ -1,4 +1,6 @@
 from django.urls import path
+from django.views.decorators.cache import cache_control
+from django.views.decorators.vary import vary_on_headers
 
 from mailing_service.apps import MailingServiceConfig
 from . import views
@@ -6,7 +8,13 @@ from . import views
 app_name = MailingServiceConfig.name
 
 urlpatterns = [
-    path("", views.HomeView.as_view(), name="home"),
+    path("",
+         vary_on_headers('Cookie')(
+             cache_control(max_age=300, private=True)(
+                 views.HomeView.as_view()
+             )
+         ),
+         name="home"),
 
     path("recipient/", views.RecipientList.as_view(), name="recipient_list"),
     path("recipient/<int:pk>/details/", views.RecipientDetail.as_view(), name="recipient_details"),

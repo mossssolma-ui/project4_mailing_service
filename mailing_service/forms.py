@@ -28,19 +28,18 @@ class DistributionForm(StyleFormMixin, forms.ModelForm):
         model = Distribution
         fields = ['start_time', 'end_time', 'message', 'recipients']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        start_time = cleaned_data.get('start_time')
-        end_time = cleaned_data.get('end_time')
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        request = kwargs.get('initial', {}).get('request')
+        if request and request.user.is_authenticated:
+            user = request.user
 
-        if not start_time or not end_time:
-            return cleaned_data
+            if user.has_perm('mailing_service.can_view_all_recipients'):
+                self.fields['recipients'].queryset = Recipient.objects.all()
+            else:
+                self.fields['recipients'].queryset = Recipient.objects.filter(owner=user)
 
-        now = timezone.now()
-        if start_time < now:
-            self.add_error('start_time', 'Дата начала не может быть в прошлом')
-
-        if start_time > end_time:
-            self.add_error('end_time', 'Дата начала не может быть позже даты окончания')
-
-        return cleaned_data
+            if user.has_perm('mailing_service.can_view_all_messages'):
+                self.fields['message'].queryset = Message.objects.all()
+            else:
+                self.fields['message'].queryset = Message.objects.filter(owner=user)
