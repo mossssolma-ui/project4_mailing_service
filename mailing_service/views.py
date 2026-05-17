@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -11,21 +12,21 @@ from .models import Recipient, Message, Distribution, Attempt
 
 
 # Recipient
-class RecipientList(ListView):
+class RecipientList(LoginRequiredMixin, ListView):
     """Список получателей рассылок"""
     model = Recipient
     template_name = 'mailing_service/recipient_list.html'
     context_object_name = 'recipients'
 
 
-class RecipientDetail(DetailView):
+class RecipientDetail(LoginRequiredMixin, DetailView):
     """Конкретный получатель рассылки"""
     model = Recipient
     template_name = 'mailing_service/recipient_details.html'
     context_object_name = 'recipient'
 
 
-class RecipientCreate(CreateView):
+class RecipientCreate(LoginRequiredMixin, CreateView):
     """Создать получателя рассылки"""
     model = Recipient
     form_class = RecipientForm
@@ -34,7 +35,7 @@ class RecipientCreate(CreateView):
     context_object_name = 'recipient'
 
 
-class RecipientUpdate(UpdateView):
+class RecipientUpdate(LoginRequiredMixin, UpdateView):
     """Изменить данные получателя рассылки"""
     model = Recipient
     form_class = RecipientForm
@@ -43,7 +44,7 @@ class RecipientUpdate(UpdateView):
     context_object_name = 'recipient'
 
 
-class RecipientDelete(DeleteView):
+class RecipientDelete(LoginRequiredMixin, DeleteView):
     """Удалить получателя рассылки"""
     model = Recipient
     template_name = 'mailing_service/recipient_delete.html'
@@ -51,21 +52,21 @@ class RecipientDelete(DeleteView):
 
 
 # Message
-class MessageList(ListView):
+class MessageList(LoginRequiredMixin, ListView):
     """Список сообщений"""
     model = Message
     template_name = 'mailing_service/message_list.html'
     context_object_name = 'message'
 
 
-class MessageDetail(DetailView):
+class MessageDetail(LoginRequiredMixin, DetailView):
     """Конкретное сообщение"""
     model = Message
     template_name = 'mailing_service/message_details.html'
     context_object_name = 'message'
 
 
-class MessageCreate(CreateView):
+class MessageCreate(LoginRequiredMixin, CreateView):
     """Создать сообщение"""
     model = Message
     form_class = MessageForm
@@ -74,7 +75,7 @@ class MessageCreate(CreateView):
     context_object_name = 'message'
 
 
-class MessageUpdate(UpdateView):
+class MessageUpdate(LoginRequiredMixin, UpdateView):
     """Изменить сообщение"""
     model = Message
     form_class = MessageForm
@@ -83,7 +84,7 @@ class MessageUpdate(UpdateView):
     context_object_name = 'message'
 
 
-class MessageDelete(DeleteView):
+class MessageDelete(LoginRequiredMixin, DeleteView):
     """Удалить сообщение"""
     model = Message
     template_name = 'mailing_service/message_delete.html'
@@ -91,7 +92,7 @@ class MessageDelete(DeleteView):
 
 
 # Distribution
-class DistributionList(ListView):
+class DistributionList(LoginRequiredMixin, ListView):
     """Список рассылок"""
     model = Distribution
     template_name = 'mailing_service/distribution_list.html'
@@ -105,7 +106,7 @@ class DistributionList(ListView):
         return queryset
 
 
-class DistributionDetail(DetailView):
+class DistributionDetail(LoginRequiredMixin, DetailView):
     """Конкретная рассылка"""
     model = Distribution
     template_name = 'mailing_service/distribution_details.html'
@@ -163,7 +164,7 @@ class DistributionDetail(DetailView):
         return redirect('mailing_service:distribution_details', pk=distribution.pk)
 
 
-class DistributionCreate(CreateView):
+class DistributionCreate(LoginRequiredMixin, CreateView):
     """Создать рассылку"""
     model = Distribution
     form_class = DistributionForm
@@ -171,7 +172,7 @@ class DistributionCreate(CreateView):
     success_url = reverse_lazy('mailing_service:distribution_list')
 
 
-class DistributionUpdate(UpdateView):
+class DistributionUpdate(LoginRequiredMixin, UpdateView):
     """Изменить рассылку"""
     model = Distribution
     form_class = DistributionForm
@@ -179,7 +180,7 @@ class DistributionUpdate(UpdateView):
     success_url = reverse_lazy('mailing_service:distribution_list')
 
 
-class DistributionDelete(DeleteView):
+class DistributionDelete(LoginRequiredMixin, DeleteView):
     """Удалить рассылку"""
     model = Distribution
     template_name = 'mailing_service/distribution_delete.html'
@@ -187,7 +188,7 @@ class DistributionDelete(DeleteView):
 
 
 # Attempt
-class AttemptList(ListView):
+class AttemptList(LoginRequiredMixin, ListView):
     model = Attempt
     template_name = 'mailing_service/attempt_list.html'
     context_object_name = 'attempts'

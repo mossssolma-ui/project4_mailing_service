@@ -23,6 +23,51 @@
                     <a class="nav-link" href="{% url 'mailing_service:attempt_list' %}">Статистика</a>
                 </li>
             </ul>
+
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                       data-bs-toggle="dropdown">
+                        {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" class="rounded-circle me-2" alt="avatar"
+                             height="30" width="30" style="object-fit: cover;">
+                        {% else %}
+                        <img src="{% static 'images/face.png' %}" class="rounded-circle me-2" alt="avatar"
+                             height="30" width="30" style="object-fit: cover;">
+                        {% endif %}
+                        {{ user.email }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'users:profile_user' %}">
+                            <i class="bi bi-person me-2"></i>Профиль
+                        </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <form method="post" action="{% url 'users:logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Выйти
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary btn-sm me-2" href="{% url 'users:login' %}">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Войти
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-success btn-sm" href="{% url 'users:register' %}">
+                        <i class="bi bi-person-plus me-1"></i>Зарегистрироваться
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>
