@@ -1,7 +1,7 @@
 {% load static %}
 
 <div class="container mt-3">
-        <div class="table-responsive">
+    <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
             <tr>
@@ -11,7 +11,7 @@
                 <th style="width: 25%;">Комментарий</th>
                 <th style="width: 12%;">Дата создания</th>
                 <th style="width: 12%;">Дата изменения</th>
-                <th style="width: 10%;">Действия</th>
+                <th style="width: 10%;">Информация</th>
             </tr>
             </thead>
             <tbody>
@@ -25,15 +25,8 @@
                 <td>{{ recipient.updated_at|date:"d.m.Y H:i" }}</td>
                 <td>
                     <div class="d-flex gap-1">
-                        <a href="{% url 'mailing_service:recipient_update' recipient.pk %}"
-                           class="btn btn-sm btn-outline-primary"
-                           title="Редактировать">Р</a>
                         <a href="{% url 'mailing_service:recipient_details' recipient.pk %}"
-                           class="btn btn-sm btn-outline-info"
-                           title="Просмотр">П</a>
-                        <a href="{% url 'mailing_service:recipient_delete' recipient.pk %}"
-                           class="btn btn-sm btn-outline-danger"
-                           title="Удалить">У</a>
+                           class="btn btn-info">Подробнее</a>
                     </div>
                 </td>
             </tr>

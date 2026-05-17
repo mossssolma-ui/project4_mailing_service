@@ -11,14 +11,10 @@
             <h1 class="display-4">Получатели рассылки</h1>
             <p class="lead">Список всех получателей рассылки</p>
         </div>
-
         <!-- Получатели -->
         <div class="mb-3">
             <a href="{% url 'mailing_service:recipient_create' %}" class="btn btn-outline-secondary">
                 Создать получателя
-            </a>
-            <a href="{% url 'mailing_service:home' %}" class="btn btn-outline-secondary">
-                Главная
             </a>
         </div>
         {% if recipients %}

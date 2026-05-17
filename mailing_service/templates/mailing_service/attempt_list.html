@@ -6,31 +6,40 @@
 {% block content %}
 <main>
     <div class="container my-5">
-        <h1 class="mb-4">Статистика</h1>
-
-        <div class="mb-3">
-            <a href="{% url 'mailing_service:home' %}" class="btn btn-outline-secondary">Главная</a>
+        <!-- Заголовок -->
+        <div class="text-center mb-5">
+            <h1 class="display-4">Статистика</h1>
+            <p class="lead">Здесь отображается вся статистика по рассылке</p>
         </div>
-
-        <!-- Активные рассылки -->
-        <div class="card mb-4">
+        <div class="card">
             <div class="card-header bg-success text-white">
                 <h5 class="mb-0">Активных рассылок: {{ active_distributions }}</h5>
             </div>
             {% if active_mailings %}
             <div class="card-body">
-                <ol>
-                    {% for mailing in active_mailings %}
-                    <li>
-                        <a href="{% url 'mailing_service:distribution_details' mailing.pk %}">
-                            {{ mailing.message.title }}
-                        </a> Время: {{ mailing.start_time|date:"d.m.Y H:i" }}<br>
-                        <small class="text-muted">
-                            {{ mailing.start_time|date:"d.m.Y H:i" }} =====РАБОТА===== {{ mailing.end_time|date:"d.m.Y H:i" }}
-                        </small>
-                    </li>
-                    {% endfor %}
-                </ol>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Рассылка</th>
+                            <th>Период отправки</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for mailing in active_mailings %}
+                        <tr>
+                            <td>{{ mailing.start_time|date:"d.m.Y H:i" }}</td>
+                            <td><a href="{% url 'mailing_service:distribution_details' mailing.pk %}">
+                                {{ mailing.message.title }}
+                            </a>
+                            </td>
+                            <td>{{ mailing.start_time|date:"d.m.Y H:i" }} - {{ mailing.end_time|date:"d.m.Y H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             {% else %}
             <div class="card-body text-muted">
@@ -38,6 +47,7 @@
             </div>
             {% endif %}
         </div>
+        <br>
 
         <!-- История попыток -->
         <div class="card">

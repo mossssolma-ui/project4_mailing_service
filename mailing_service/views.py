@@ -116,6 +116,11 @@ class DistributionDetail(DetailView):
         obj.update_status()
         return obj
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
+
     def post(self, request, *args, **kwargs):
         """Ручной запуск рассылки"""
 
@@ -124,9 +129,10 @@ class DistributionDetail(DetailView):
         now = timezone.now()
 
         if not (distribution.start_time <= now <= distribution.end_time):
-            messages.error(request, 'Текущее время не входит в интервал рассылки')
+            messages.error(request, 'Время запуска рассылки еще не настало или истекло')
             return redirect('mailing_service:distribution_details', pk=distribution.pk)
 
+        attempts_for_create = []
         for recipient in distribution.recipients.all():
             try:
                 send_mail(
@@ -136,17 +142,23 @@ class DistributionDetail(DetailView):
                     recipient_list=[recipient.email],
                     fail_silently=False,
                 )
-                Attempt.objects.create(
-                    status=Attempt.Status.SUCCESS,
-                    response="Письмо успешно отправлено",
-                    distribution=distribution
+                attempts_for_create.append(
+                    Attempt(
+                        status=Attempt.Status.SUCCESS,
+                        response="Письмо успешно отправлено",
+                        distribution=distribution
+                    )
                 )
             except Exception as e:
-                Attempt.objects.create(
-                    status=Attempt.Status.FAILED,
-                    response=str(e)[:500],
-                    distribution=distribution
+                attempts_for_create.append(
+                    Attempt(
+                        status=Attempt.Status.FAILED,
+                        response=str(e)[:500],
+                        distribution=distribution
+                    )
                 )
+        if attempts_for_create:
+            Attempt.objects.bulk_create(attempts_for_create)
 
         return redirect('mailing_service:distribution_details', pk=distribution.pk)
 

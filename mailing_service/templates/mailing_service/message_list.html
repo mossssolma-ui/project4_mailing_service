@@ -11,14 +11,10 @@
             <h1 class="display-4">Список сообщений</h1>
             <p class="lead">Здесь отображаются все сообщения</p>
         </div>
-
         <!-- Сообщения -->
         <div class="mb-3">
             <a href="{% url 'mailing_service:message_create' %}" class="btn btn-outline-secondary">
                 Создать сообщение
-            </a>
-            <a href="{% url 'mailing_service:home' %}" class="btn btn-outline-secondary">
-                Главная
             </a>
         </div>
         {% if message %}
