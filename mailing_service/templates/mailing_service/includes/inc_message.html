@@ -10,7 +10,7 @@
                     <th style="width: 30%;">Текст</th>
                     <th style="width: 15%;">Дата создания</th>
                     <th style="width: 15%;">Дата изменения</th>
-                    <th style="width: 10%;">Действия</th>
+                    <th style="width: 10%;">Информация</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,15 +23,8 @@
                     <td>{{ mes.updated_at|date:"d.m.Y H:i" }}</td>
                     <td>
                         <div class="d-flex gap-1">
-                            <a href="{% url 'mailing_service:message_update' mes.pk %}"
-                               class="btn btn-sm btn-outline-primary"
-                               title="Редактировать">Р</a>
                             <a href="{% url 'mailing_service:message_details' mes.pk %}"
-                               class="btn btn-sm btn-outline-info"
-                               title="Просмотр">П</a>
-                            <a href="{% url 'mailing_service:message_delete' mes.pk %}"
-                               class="btn btn-sm btn-outline-danger"
-                               title="Удалить">У</a>
+                           class="btn btn-info">Подробнее</a>
                         </div>
                     </td>
                 </tr>

@@ -14,7 +14,7 @@
                         <!-- Заголовок -->
                         <h1 class="card-title display-6 mb-3">{{ distribution.message.title }}</h1>
 
-                        <!-- Статус -->
+                        <!-- статус -->
                         <div class="mb-3">
                             <span class="badge
                                 {% if distribution.status == 'created' %}bg-secondary
@@ -24,7 +24,16 @@
                             </span>
                         </div>
 
-                        <!-- Мета-информация (время) -->
+                        <!-- сообщение-->
+                        {% if messages %}
+                        <div class="container mt-3">
+                            {% for mes in messages %}
+                            <span class="btn btn-danger">{{ mes }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <br>
+                        <!-- время -->
                         <div class="d-flex gap-3 text-secondary mb-4">
                             <small>
                                 <i class="bi bi-calendar3 me-1"></i>Начало: {{ distribution.start_time|date:"d.m.Y H:i" }}
@@ -34,34 +43,43 @@
                             </small>
                         </div>
 
-                        <!-- Текст письма -->
+                        <!-- письмо -->
                         <div class="card-text fs-5 lh-lg">
-                            {{ distribution.message.content|linebreaks }}
+                            {{ distribution.message.content|truncatechars:50 }}
                         </div>
 
                         <hr>
 
-                        <!-- Информация о получателях -->
+                        <!-- получатели -->
                         <h5 class="mb-3">Получатели ({{ distribution.recipients.count }}):</h5>
                         <div class="mb-4">
                             {% for recipient in distribution.recipients.all %}
-                                <span class="badge bg-secondary me-1 mb-1">{{ recipient.email }}</span>
+                            <span class="badge bg-secondary me-1 mb-1">{{ recipient.email }}</span>
                             {% empty %}
-                                <span class="text-muted">Нет получателей</span>
+                            <span class="text-muted">Нет получателей</span>
                             {% endfor %}
                         </div>
 
-                        <!-- Кнопки действий -->
+                        <!-- кнопки -->
                         <div class="d-flex gap-2">
-                            <a href="{% url 'mailing_service:distribution_list' %}" class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-left me-2"></i>Назад к списку
+                            <a href="{% url 'mailing_service:distribution_list' %}" class="btn btn-primary">
+                                Назад к списку
                             </a>
-                            <a href="{% url 'mailing_service:distribution_update' distribution.pk %}" class="btn btn-warning">
-                                <i class="bi bi-pencil me-2"></i>Редактировать
+                            <a href="{% url 'mailing_service:distribution_update' distribution.pk %}"
+                               class="btn btn-secondary">
+                                Редактировать
                             </a>
-                            <a href="{% url 'mailing_service:distribution_delete' distribution.pk %}" class="btn btn-danger">
-                                <i class="bi bi-trash me-2"></i>Удалить
+                            <a href="{% url 'mailing_service:distribution_delete' distribution.pk %}"
+                               class="btn btn-danger">
+                                Удалить
                             </a>
+                            <form method="post" action="{% url 'mailing_service:distribution_details' distribution.pk %}"
+                                  style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">
+                                    Отправить
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

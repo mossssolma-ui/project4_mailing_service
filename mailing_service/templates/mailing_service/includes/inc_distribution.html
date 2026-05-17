@@ -10,7 +10,7 @@
                 <th style="width: 20%;">Получатели</th>
                 <th style="width: 10%;">Статус</th>
                 <th style="width: 15%;">Время отправки</th>
-                <th style="width: 20%;">Действия</th>
+                <th style="width: 20%;">Информация</th>
             </tr>
             </thead>
             <tbody>
@@ -20,7 +20,7 @@
                 <td>{{ distribut.message.title|truncatewords:5 }}</td>
                 <td>
                     {% for recipient in distribut.recipients.all %}
-                        {{ recipient.email }}{% if not forloop.last %}, {% endif %}
+                        {{ recipient.email }}
                     {% endfor %}
                 </td>
                 <td>{{ distribut.get_status_display }}</td>
@@ -30,19 +30,8 @@
                 </td>
                 <td>
                     <div class="d-flex gap-1 flex-wrap">
-                        <a href="{% url 'mailing_service:distribution_update' distribut.pk %}"
-                           class="btn btn-sm btn-outline-primary" title="Редактировать">Р</a>
                         <a href="{% url 'mailing_service:distribution_details' distribut.pk %}"
-                           class="btn btn-sm btn-outline-info" title="Просмотр">П</a>
-                        <a href="{% url 'mailing_service:distribution_delete' distribut.pk %}"
-                           class="btn btn-sm btn-outline-danger" title="Удалить">У</a>
-
-                         <form method="post" action="{% url 'mailing_service:distribution_details' distribut.pk %}" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-success" title="Отправить рассылку">
-                                Отправить
-                            </button>
-                        </form>
+                           class="btn btn-info">Подробнее</a>
                     </div>
                 </td>
             </tr>

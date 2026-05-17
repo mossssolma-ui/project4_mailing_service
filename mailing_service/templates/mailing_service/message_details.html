@@ -32,14 +32,16 @@
 
                         <hr>
                         <div class="d-flex gap-2">
-                            <a href="{% url 'mailing_service:message_list' %}" class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-left me-2"></i>Назад к списку
+                            <a href="{% url 'mailing_service:message_list' %}" class="btn btn-primary">
+                                Назад к списку
                             </a>
-                            <a href="{% url 'mailing_service:message_update' message.pk %}" class="btn btn-warning">
-                                <i class="bi bi-pencil me-2"></i>Редактировать
+                            <a href="{% url 'mailing_service:message_update' message.pk %}"
+                               class="btn btn-secondary">
+                                Редактировать
                             </a>
-                            <a href="{% url 'mailing_service:message_delete' message.pk %}" class="btn btn-danger">
-                                <i class="bi bi-trash me-2"></i>Удалить
+                            <a href="{% url 'mailing_service:message_delete' message.pk %}"
+                               class="btn btn-danger">
+                                Удалить
                             </a>
                         </div>
                     </div>

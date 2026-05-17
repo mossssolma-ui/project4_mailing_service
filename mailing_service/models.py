@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from users.models import CustomUser
+
 
 class Recipient(models.Model):
     """ Получатель рассылки """
@@ -9,6 +11,7 @@ class Recipient(models.Model):
     comment = models.TextField(blank=True, verbose_name="Комментарий")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата изменения")
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='owners_rec', verbose_name="Владелец")
 
     def __str__(self):
         return f"{self.email} - {self.full_name}"
@@ -17,6 +20,9 @@ class Recipient(models.Model):
         verbose_name = "Получатель"
         verbose_name_plural = "Получатели"
         ordering = ["email"]
+        permissions = [
+            ("can_view_all_recipients", "Может просматривать всех получателей")
+        ]
 
 
 class Message(models.Model):
@@ -25,6 +31,7 @@ class Message(models.Model):
     content = models.TextField(verbose_name="Тело письма")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата изменения")
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='owners_mes', verbose_name="Владелец")
 
     def __str__(self):
         return self.title
@@ -33,6 +40,9 @@ class Message(models.Model):
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
         ordering = ["title"]
+        permissions = [
+            ("can_view_all_messages", "Может просматривать все сообщения")
+        ]
 
 
 class Distribution(models.Model):
@@ -54,6 +64,7 @@ class Distribution(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name="distributions",
                                 verbose_name="Сообщение")
     recipients = models.ManyToManyField(Recipient, related_name="distributions", verbose_name="Получатели")
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='owners_dist', verbose_name="Владелец")
 
     def __str__(self):
         return f"{self.message} - {self.get_status_display()}"
@@ -79,6 +90,10 @@ class Distribution(models.Model):
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
         ordering = ["-end_time"]
+        permissions = [
+            ("can_view_all_distributions", "Может просматривать все рассылки"),
+            ("can_disable_distributions", "Может отключать рассылки"),
+        ]
 
 
 class Attempt(models.Model):
@@ -93,6 +108,8 @@ class Attempt(models.Model):
     response = models.TextField(verbose_name="Ответ почтового сервера")
     distribution = models.ForeignKey(Distribution, on_delete=models.CASCADE, related_name="attempts",
                                      verbose_name="Рассылка")
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='owners_attempt',
+                              verbose_name="Владелец")
 
     def __str__(self):
         return f"{self.dt} - {self.status}"
@@ -101,3 +118,6 @@ class Attempt(models.Model):
         verbose_name = "Попытка рассылки"
         verbose_name_plural = "Попытки рассылки"
         ordering = ["-dt"]
+        permissions = [
+            ("can_view_all_attempt", "Может просматривать все попытки")
+        ]
