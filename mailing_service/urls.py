@@ -33,6 +33,7 @@ urlpatterns = [
     path("distribution/create/", views.DistributionCreate.as_view(), name="distribution_create"),
     path("distribution/<int:pk>/update/", views.DistributionUpdate.as_view(), name="distribution_update"),
     path("distribution/<int:pk>/delete/", views.DistributionDelete.as_view(), name="distribution_delete"),
+    path("distribution/<int:pk>/disable/", views.DistributionDisableView.as_view(), name="distribution_disable"),
 
     path("attempts/", views.AttemptList.as_view(), name="attempt_list"),
 ]
