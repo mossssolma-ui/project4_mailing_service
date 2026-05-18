@@ -35,6 +35,7 @@
                             <a href="{% url 'mailing_service:message_list' %}" class="btn btn-primary">
                                 Назад к списку
                             </a>
+                            {% if message.owner == user %}
                             <a href="{% url 'mailing_service:message_update' message.pk %}"
                                class="btn btn-secondary">
                                 Редактировать
@@ -43,6 +44,7 @@
                                class="btn btn-danger">
                                 Удалить
                             </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

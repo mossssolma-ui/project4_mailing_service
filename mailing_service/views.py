@@ -3,10 +3,12 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.cache import cache
 from django.core.mail import send_mail
-from django.shortcuts import redirect
+from django.http import HttpResponseForbidden, HttpResponse
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.decorators.cache import cache_page
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
@@ -175,6 +177,10 @@ class DistributionDetail(PermissionRequiredMixin, LoginRequiredMixin, DetailView
         distribution = self.object
         now = timezone.now()
 
+        if distribution.owner != request.user and not request.user.is_superuser:
+            messages.error(request, 'Вы можете отправлять только свои рассылки')
+            return redirect('mailing_service:distribution_details', pk=distribution.pk)
+
         if not (distribution.start_time <= now <= distribution.end_time):
             messages.error(request, 'Время запуска рассылки еще не настало или истекло')
             return redirect('mailing_service:distribution_details', pk=distribution.pk)
@@ -257,6 +263,30 @@ class DistributionDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView
         return Distribution.objects.filter(owner=self.request.user)
 
 
+class DistributionDisableView(PermissionRequiredMixin, LoginRequiredMixin, View):
+    permission_required = 'mailing_service.can_disable_distributions'
+
+    def post(self, request, pk):
+        distribution = get_object_or_404(Distribution, pk=pk)
+
+        if not self.request.user.has_perm('mailing_service.can_disable_distributions'):
+            messages.error(request, 'У вас нет прав отключать рассылки')
+            return redirect('mailing_service:distribution_list')
+
+        if distribution.status != Distribution.Status.COMPLETED:
+            distribution.status = Distribution.Status.COMPLETED
+            distribution.save()
+
+            cache_keys = ['home_stats_manager', 'home_stats_user', 'home_stats_guest']
+            for key in cache_keys:
+                cache.delete(key)
+
+            messages.success(request, f'Рассылка "{distribution.message.title}" отключена')
+        else:
+            messages.warning(request, f'Рассылка "{distribution.message.title}" завершилась')
+
+        return redirect('mailing_service:distribution_list')
+
 # Attempt
 class AttemptList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
     model = Attempt
@@ -307,7 +337,7 @@ class AttemptList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
 
 
 # home
-@method_decorator(cache_page(300), name='dispatch')  # кеш на 5 минут
+@method_decorator(cache_page(300), name='dispatch')
 class HomeView(TemplateView):
     template_name = 'mailing_service/home.html'
 
@@ -319,7 +349,12 @@ class HomeView(TemplateView):
             'mailing_service.can_view_all_distributions')
         is_authenticated = self.request.user.is_authenticated
 
-        cache_key = f'home_stats_{"manager" if is_manager else "user" if is_authenticated else "guest"}'
+        if is_manager:
+            cache_key = f'home_stats_manager_{self.request.user.id}'
+        elif is_authenticated:
+            cache_key = f'home_stats_user_{self.request.user.id}'
+        else:
+            cache_key = 'home_stats_guest'
 
         stats = cache.get(cache_key)
 

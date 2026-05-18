@@ -65,6 +65,7 @@
                             <a href="{% url 'mailing_service:distribution_list' %}" class="btn btn-primary">
                                 Назад к списку
                             </a>
+                            {% if distribution.owner == user %}
                             <a href="{% url 'mailing_service:distribution_update' distribution.pk %}"
                                class="btn btn-secondary">
                                 Редактировать
@@ -80,6 +81,16 @@
                                     Отправить
                                 </button>
                             </form>
+                            {% endif %}
+                            {% if perms.mailing_service.can_disable_distributions %}
+                            <form method="post" action="{% url 'mailing_service:distribution_disable' distribution.pk %}"
+                                  style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-warning">
+                                    Отключить
+                                </button>
+                            </form>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
