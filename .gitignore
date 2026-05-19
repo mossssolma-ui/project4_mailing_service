@@ -1,3 +1,6 @@
+media/*
+!media/*/.gitkeep
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -190,7 +193,7 @@ cython_debug/
 
 # Abstra
 #   Abstra is an AI-powered process automation framework.
-#   Ignore directories containing user credentials, local state, and settings.
+#   Ignore directories containing users credentials, local state, and settings.
 #   Learn more at https://abstra.io/docs
 .abstra/
 

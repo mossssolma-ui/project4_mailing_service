@@ -1,0 +1,32 @@
+{% extends 'mailing_service/base.html' %}
+{% load static %}
+
+{% block title %} Список рассылок {% endblock %}
+
+{% block content %}
+<main>
+    <div class="container my-5">
+        <!-- Заголовок -->
+        <div class="text-center mb-5">
+            <h1 class="display-4">Список рассылок</h1>
+            <p class="lead">Здесь отображаются все созданные рассылки</p>
+        </div>
+        <!-- Рассылка -->
+        <div class="mb-3">
+            <a href="{% url 'mailing_service:distribution_create' %}" class="btn btn-outline-secondary">
+                Создать рассылку
+            </a>
+        </div>
+        {% if distribution %}
+        <div class="row g-4">
+            {% include "mailing_service/includes/inc_distribution.html" %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <h4 class="alert-heading">Пока нет данных</h4>
+            <p>Данные появится после добавления рассылки.</p>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

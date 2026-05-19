@@ -1,0 +1,48 @@
+{% load static %}
+
+<div class="container mt-3">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+            <tr>
+                <th style="width: 50px;">№</th>
+                <th style="width: 20%;">Тема</th>
+                <th style="width: 20%;">Получатели</th>
+                <th style="width: 10%;">Статус</th>
+                <th style="width: 15%;">Время отправки</th>
+                <th style="width: 20%;">Информация</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for distribut in distribution %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ distribut.message.title|truncatewords:5 }}</td>
+                <td>
+                    {% for recipient in distribut.recipients.all %}
+                        {{ recipient.email }}
+                    {% endfor %}
+                </td>
+                <td>{{ distribut.get_status_display }}</td>
+                <td>
+                    {{ distribut.start_time|date:"d.m.Y H:i" }} -
+                    {{ distribut.end_time|date:"d.m.Y H:i" }}
+                </td>
+                <td>
+                    <div class="d-flex gap-1 flex-wrap">
+                        <a href="{% url 'mailing_service:distribution_details' distribut.pk %}"
+                           class="btn btn-info">Подробнее</a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">
+                    <div class="alert alert-info mb-0">Нет рассылок</div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

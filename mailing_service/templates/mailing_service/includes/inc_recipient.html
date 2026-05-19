@@ -1,0 +1,43 @@
+{% load static %}
+
+<div class="container mt-3">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+            <tr>
+                <th style="width: 50px;">№</th>
+                <th style="width: 20%;">E-mail</th>
+                <th style="width: 20%;">ФИО</th>
+                <th style="width: 25%;">Комментарий</th>
+                <th style="width: 12%;">Дата создания</th>
+                <th style="width: 12%;">Дата изменения</th>
+                <th style="width: 10%;">Информация</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for recipient in recipients %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ recipient.email }}</td>
+                <td>{{ recipient.full_name }}</td>
+                <td>{{ recipient.comment|default:"—" }}</td>
+                <td>{{ recipient.created_at|date:"d.m.Y H:i" }}</td>
+                <td>{{ recipient.updated_at|date:"d.m.Y H:i" }}</td>
+                <td>
+                    <div class="d-flex gap-1">
+                        <a href="{% url 'mailing_service:recipient_details' recipient.pk %}"
+                           class="btn btn-info">Подробнее</a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">
+                    <div class="alert alert-info mb-0">Нет получателей</div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
